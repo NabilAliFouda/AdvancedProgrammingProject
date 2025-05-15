@@ -28,29 +28,30 @@ public abstract class User {
         this.loggedIn = false;
     }
 
-    public void logIn (int ID , String password) {
+    public void logIn(int ID, String password) throws AlreadyLoggedInException {
         if (loggedIn) {
-            System.out.println("User already logged in.");
-            return;
+            throw new AlreadyLoggedInException("User is already logged in.");
         }
-        if(this.password.equals(password) && this.ID == ID){
+        if (this.password.equals(password) && this.ID == ID) {
             System.out.println("Logged in successfully.");
             loggedIn = true;
-        } 
-        else{
+        } else {
             System.out.println("Incorrect ID or password.");
-        } 
+        }
     }
-    public void logout(){
-        if(loggedIn){
+    
+    public void logout() throws AlreadyLoggedOutException {
+        if (loggedIn) {
             loggedIn = false;
             System.out.println("Logged out successfully.");
-        }
-        else {
-            System.out.println("User is already logged out");
+        } else {
+            throw new AlreadyLoggedOutException("User is already logged out.");
         }
     }
-
+    @Override
+public String toString() {
+    return "User{name='" + name + "', ID=" + ID + ", loggedIn=" + loggedIn + "}";
+}
     public abstract void getRole();
        
 }
