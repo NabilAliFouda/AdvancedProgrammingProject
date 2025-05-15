@@ -8,7 +8,7 @@ package asu.advancedprogrammingproject;
  *
  * @author nabil
  */
-public class Language {
+public class Language implements Comparable<Language> {
     private String LanguageName;
     private int StudentNo;
     private Teacher teachers[];
@@ -31,5 +31,9 @@ public class Language {
     }  
     public String getLanguageName() {
         return LanguageName;
+    }
+    @Override
+    public int compareTo(Language other) {
+        return this.StudentNo - other.StudentNo;
     }
 }
