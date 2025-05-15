@@ -8,6 +8,7 @@ package asu.advancedprogrammingproject;
  *
  * @author nabil
  */
-public class Teacher {
+public class Teacher  {
     
 }
+

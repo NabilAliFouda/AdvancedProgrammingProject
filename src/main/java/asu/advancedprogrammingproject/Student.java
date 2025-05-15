@@ -8,6 +8,15 @@ package asu.advancedprogrammingproject;
  *
  * @author nabil
  */
-public class Student {
-    
+public class Student extends User {
+    public Student(String name, int ID, String password) {
+        super(name, ID, password);
+    }
+
+    @Override
+    public void getRole() {
+        System.out.println("Role: Student");
+    }
 }
+
+
