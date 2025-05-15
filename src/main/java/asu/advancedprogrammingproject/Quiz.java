@@ -8,6 +8,39 @@ package asu.advancedprogrammingproject;
  *
  * @author nabil
  */
-public class Quiz {
-    
+public class Quiz implements Gradeable {
+    private Question[] questions;
+    private int totalGrade;
+    private int grade;
+    private boolean graded;
+
+    public Quiz(Question[] questions, Course course) {
+        this.questions = questions;
+        this.totalGrade = questions.length;
+        this.graded = false;
+        this.grade = 0;
+    }
+
+    public int grade() throws IllegalStateException {
+        int grade = 0;
+        if (!graded) {
+            for (Question q : questions) {
+                if (q.grade()==1) {
+                    grade++;
+                }
+            }
+            graded = true;
+            return grade;
+        }
+        throw new IllegalStateException("Quiz already graded");
+    }
+
+    public void print() {
+        System.out.println("quiz");
+        for (Question q : questions) {
+            q.print();
+            System.out.println();
+        }
+        System.out.println("Total Grade: " + grade + "/" + totalGrade);
+    }
 }

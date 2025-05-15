@@ -8,6 +8,6 @@ package asu.advancedprogrammingproject;
  *
  * @author nabil
  */
-public class Gradeable {
-    
+public interface Gradeable{
+    public int grade();
 }
