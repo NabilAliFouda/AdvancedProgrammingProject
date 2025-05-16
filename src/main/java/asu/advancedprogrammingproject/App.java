@@ -8,6 +8,14 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import java.util.ArrayList;
 import java.util.List;
+import javafx.geometry.Pos;
+import javafx.scene.layout.*;
+import javafx.scene.layout.StackPane;
+
+/**
+ *
+ * @author Ingy
+ */
 
 public class App extends Application {
 
@@ -46,7 +54,7 @@ public class App extends Application {
         users.add(carlos);
 
         primaryStage.setScene(createLoginScene(primaryStage));
-        primaryStage.setTitle("Login");
+        primaryStage.setTitle("Login to Courses");
         primaryStage.show();
         
         System.out.println("Quizzes in English course: " + englishCourse.getQuizzes().size());
@@ -61,90 +69,129 @@ public class App extends Application {
 
     }
 
-    public Scene createLoginScene(Stage primaryStage) {
-        TextField idField = new TextField();
-        idField.setPromptText("Enter ID");
+public Scene createLoginScene(Stage primaryStage) {
+    StackPane root = new StackPane();
+    root.setStyle("-fx-background-color: linear-gradient(to bottom, #d55a9d, #574bdf);");
 
-        PasswordField passField = new PasswordField();
-        passField.setPromptText("Enter Password");
+    VBox card = new VBox(15);
+    card.setPadding(new Insets(25));
+    card.setAlignment(Pos.CENTER);
+    card.setMaxWidth(300);
+    card.setStyle(
+        "-fx-background-color: white;" +
+        "-fx-background-radius: 10;" +
+        "-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0, 0, 8);"
+    );
 
-        TextField visiblePassField = new TextField();
-        visiblePassField.setPromptText("Enter Password");
-        visiblePassField.setManaged(false);
-        visiblePassField.setVisible(false);
+    Label title = new Label("LOGIN");
+    title.setStyle("-fx-font-size: 22px; -fx-font-weight: bold;");
 
-        visiblePassField.textProperty().bindBidirectional(passField.textProperty());
+    // ID Field
+    TextField idField = new TextField();
+    idField.setPromptText("ID");
+    idField.setStyle(
+        "-fx-background-color: #f0f0f0;" +
+        "-fx-background-radius: 5;" +
+        "-fx-padding: 8;" +
+        "-fx-border-color: transparent;"
+    );
 
-        CheckBox showPasswordCheckBox = new CheckBox("Show Password");
-        showPasswordCheckBox.setOnAction(e -> {
-            if (showPasswordCheckBox.isSelected()) {
-                visiblePassField.setManaged(true);
-                visiblePassField.setVisible(true);
+    // Password Fields (one hidden, one visible)
+    PasswordField passField = new PasswordField();
+    passField.setPromptText("Password");
+    passField.setStyle(
+        "-fx-background-color: #f0f0f0;" +
+        "-fx-background-radius: 5;" +
+        "-fx-padding: 8;" +
+        "-fx-border-color: transparent;"
+    );
 
-                passField.setManaged(false);
-                passField.setVisible(false);
-            } else {
-                visiblePassField.setManaged(false);
-                visiblePassField.setVisible(false);
+    TextField visiblePassField = new TextField();
+    visiblePassField.setPromptText("Password");
+    visiblePassField.setStyle(
+        "-fx-background-color: #f0f0f0;" +
+        "-fx-background-radius: 5;" +
+        "-fx-padding: 8;" +
+        "-fx-border-color: transparent;"
+    );
+    visiblePassField.setManaged(false);
+    visiblePassField.setVisible(false);
 
-                passField.setManaged(true);
-                passField.setVisible(true);
+    // Bind both password fields
+    visiblePassField.textProperty().bindBidirectional(passField.textProperty());
+
+    // Show Password Checkbox
+    CheckBox showPassword = new CheckBox("Show Password");
+    showPassword.setStyle("-fx-text-fill: #d55a9d;");
+    showPassword.setOnAction(e -> {
+        boolean show = showPassword.isSelected();
+        passField.setVisible(!show);
+        passField.setManaged(!show);
+        visiblePassField.setVisible(show);
+        visiblePassField.setManaged(show);
+    });
+
+    // Login Button
+    Button loginBtn = new Button("LOGIN");
+    loginBtn.setStyle(
+        "-fx-background-color: #d55a9d;" +
+        "-fx-text-fill: white;" +
+        "-fx-font-weight: bold;" +
+        "-fx-background-radius: 5;" +
+        "-fx-padding: 8 16;" +
+        "-fx-cursor: hand;"
+    );
+
+    Label messageLabel = new Label();
+    messageLabel.setStyle("-fx-text-fill: red;");
+
+    loginBtn.setOnAction(e -> {
+        String idText = idField.getText();
+        String passText = passField.isVisible() ? passField.getText() : visiblePassField.getText();
+        try {
+            int id = Integer.parseInt(idText);
+            User user = users.stream().filter(u -> u.getID() == id).findFirst().orElse(null);
+            if (user == null) {
+                messageLabel.setText("User not found.");
+                return;
             }
-        });
-
-        Label messageLabel = new Label();
-
-        Button loginBtn = new Button("Login");
-        loginBtn.setOnAction(e -> {
-            String idText = idField.getText();
-            String passText = passField.isVisible() ? passField.getText() : visiblePassField.getText();
+            if (!user.getPassword().trim().equals(passText.trim())) {
+                messageLabel.setText("Incorrect password.");
+                return;
+            }
 
             try {
-                int id = Integer.parseInt(idText);
-                User user = users.stream().filter(u -> u.getID() == id).findFirst().orElse(null);
+                user.logIn(id, passText);
+                messageLabel.setStyle("-fx-text-fill: green;");
+                messageLabel.setText("Login successful!");
 
-                if (user == null) {
-                    messageLabel.setText("User not found.");
-                    return;
+                if (user instanceof Student) {
+                    primaryStage.setScene(StudentDashboard.createStudentDashboardScene(primaryStage, (Student) user));
+                } else if (user instanceof Teacher) {
+                    primaryStage.setScene(TeacherDashboard.createTeacherDashboardScene(primaryStage, (Teacher) user));
+                } else {
+                    primaryStage.setScene(Dashboard.createDashboardScene(primaryStage, user));
                 }
 
-                if (!user.getPassword().trim().equals(passText.trim())) {
-                    messageLabel.setText("Incorrect password.");
-                    return;
-                }
-
-                try {
-                    user.logIn(id, passText);
-                    messageLabel.setText("Login successful! Redirecting...");
-
-                    if (user instanceof Student) {
-                        primaryStage.setScene(StudentDashboard.createStudentDashboardScene(primaryStage, (Student) user));
-                    } else if(user instanceof Teacher) {
-                        primaryStage.setScene(TeacherDashboard.createStudentDashboardScene(primaryStage, (Teacher) user));}
-                     else {
-                        primaryStage.setScene(Dashboard.createDashboardScene(primaryStage, user));
-                    }
-
-                } catch (AlreadyLoggedInException ex) {
-                    messageLabel.setText("Error: " + ex.getMessage());
-                }
-
-            } catch (NumberFormatException nfe) {
-                messageLabel.setText("ID must be a number.");
+            } catch (AlreadyLoggedInException ex) {
+                messageLabel.setText("Error: " + ex.getMessage());
             }
-        });
 
-        VBox layout = new VBox(10);
-        layout.setPadding(new Insets(15));
-        layout.getChildren().addAll(
-                new Label("ID:"), idField,
-                new Label("Password:"), passField, visiblePassField,
-                showPasswordCheckBox, loginBtn, messageLabel
-        );
+        } catch (NumberFormatException nfe) {
+            messageLabel.setText("ID must be a number.");
+        }
+    });
 
-        return new Scene(layout, 320, 300);
-        
-    }
+    card.getChildren().addAll(
+        title, idField, passField, visiblePassField,
+        showPassword, loginBtn, messageLabel
+    );
+    root.getChildren().add(card);
+
+    return new Scene(root, 420, 480);
+}
+
+
 
     public static void main(String[] args) {
         launch(args);

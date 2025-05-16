@@ -2,12 +2,21 @@ package asu.advancedprogrammingproject;
 
 import java.util.ArrayList;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
 import java.util.List;
 
+/**
+ *
+ * @author Kareem
+ */
 public class StudentDashboard {
 
     private static VBox quizBox = new VBox(10);
@@ -18,28 +27,55 @@ public class StudentDashboard {
     public static Scene createStudentDashboardScene(Stage primaryStage, Student student) {
         primaryStage.setTitle("Student Dashboard");
 
-        Tab profileTab = new Tab("Profile");
-        profileTab.setClosable(false);
-        profileLayout.setPadding(new Insets(15));
-        profileLayout.getChildren().addAll(new Label("Profile Information"), profileDetails);
-        profileTab.setContent(profileLayout);
-        updateProfileView(student);
+        // **Styled Background**
+        StackPane root = new StackPane();
+        root.setStyle("-fx-background-color: linear-gradient(to bottom, #d55a9d, #574bdf);");
 
+        VBox card = new VBox(15);
+        card.setPadding(new Insets(25));
+        card.setAlignment(Pos.CENTER);
+        card.setMaxWidth(400);
+        card.setStyle(
+            "-fx-background-color: white;" +
+            "-fx-background-radius: 10;" +
+            "-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0, 0, 8);"
+        );
+
+        // **Styled TabPane**
         TabPane tabPane = new TabPane();
+        tabPane.setStyle(
+            "-fx-tab-min-width: 71.5px;" + // Expand tab width
+            "-fx-tab-max-width: 81.5px;" + // Ensure uniformity
+            "-fx-background-color: transparent;" // Removes default background
+        );
+
+
+        // **Tabs**
+        Tab profileTab = new Tab("Profile", profileLayout);
+        profileTab.setClosable(false);
+
+        profileLayout.setPadding(new Insets(15));
+        profileLayout.getChildren().addAll(createBoldLabel("Profile Information"), profileDetails);
+        updateProfileView(student);
 
         Tab coursesTab = new Tab("Courses", getCoursesView(student));
         coursesTab.setClosable(false);
 
-        Tab quizzesTab = new Tab("Quizzes");
+        Tab quizzesTab = new Tab("Quizzes", getQuizzesView(student));
         quizzesTab.setClosable(false);
-        quizzesTab.setContent(getQuizzesView(student));
 
         Tab gradesTab = new Tab("Grades", getGradesView(student));
         gradesTab.setClosable(false);
 
         tabPane.getTabs().addAll(coursesTab, quizzesTab, gradesTab, profileTab);
+        
+        // Apply distinct styles for each tab
+        profileTab.setStyle("-fx-background-color: #d55a9d; -fx-text-fill: white; -fx-font-weight: bold;");
+        coursesTab.setStyle("-fx-background-color: #574bdf; -fx-text-fill: white; -fx-font-weight: bold;");
+        quizzesTab.setStyle("-fx-background-color: #892be2; -fx-text-fill: white; -fx-font-weight: bold;");
+        gradesTab.setStyle("-fx-background-color: #ff8b94; -fx-text-fill: white; -fx-font-weight: bold;");
 
-        // Update profile info whenever Profile tab is selected
+        // **Tab switching listener**
         tabPane.getSelectionModel().selectedItemProperty().addListener((obs, oldTab, newTab) -> {
             if (newTab == profileTab) {
                 updateProfileView(student);
@@ -49,23 +85,31 @@ public class StudentDashboard {
             }
         });
 
-        Button logoutButton = new Button("Logout");
+        // **Styled Logout Button**
+        Button logoutButton = new Button("LOGOUT");
+        logoutButton.setStyle(
+            "-fx-background-color: #A020F0;" +
+            "-fx-text-fill: white;" +
+            "-fx-font-weight: bold;" +
+            "-fx-background-radius: 5;" +
+            "-fx-padding: 8 16;" +
+            "-fx-cursor: hand;"
+        );
         logoutButton.setOnAction(e -> {
             App appInstance = new App();
             primaryStage.setScene(appInstance.createLoginScene(primaryStage));
         });
 
-        VBox layout = new VBox(10);
-        layout.setPadding(new Insets(15));
-        layout.getChildren().addAll(tabPane, logoutButton);
+        card.getChildren().addAll(tabPane, logoutButton);
+        root.getChildren().add(card);
 
-        return new Scene(layout, 600, 400);
+        return new Scene(root, 600, 450);
     }
 
     private static VBox getCoursesView(Student student) {
         VBox layout = new VBox(10);
         layout.setPadding(new Insets(15));
-        Label title = new Label("Enrolled Courses");
+        Label title = createBoldLabel("Enrolled Courses");
 
         List<Course> courses = student.getEnrolledCourses();
         StringBuilder coursesList = new StringBuilder();
@@ -82,7 +126,7 @@ public class StudentDashboard {
     private static VBox getQuizzesView(Student student) {
         VBox layout = new VBox(10);
         layout.setPadding(new Insets(15));
-        Label title = new Label("Available Quizzes");
+        Label title = createBoldLabel("Available Quizzes");
 
         List<Course> courses = student.getEnrolledCourses();
         if (courses.isEmpty()) {
@@ -100,7 +144,15 @@ public class StudentDashboard {
 
         Button openQuizButton = new Button("Open Quiz");
         openQuizButton.setVisible(false);
-
+        openQuizButton.setStyle(
+            "-fx-background-color: #A020F0;" +
+            "-fx-text-fill: white;" +
+            "-fx-font-weight: bold;" +
+            "-fx-background-radius: 5;" +
+            "-fx-padding: 8 16;" +
+            "-fx-cursor: hand;"
+        );
+        
         languageComboBox.setOnAction(e -> {
             quizBox.getChildren().clear();
             Language selectedLanguage = languageComboBox.getValue();
@@ -146,6 +198,7 @@ public class StudentDashboard {
             for (int i = 0; i < questions.size(); i++) {
                 Question q = questions.get(i);
                 Label questionLabel = new Label((i + 1) + ". " + q.getText());
+                questionLabel.setFont(Font.font("System", FontWeight.BOLD, 12));
                 TextField answerField = new TextField();
                 answerField.setPromptText("Answer (True/False)");
                 answerFields.add(answerField);
@@ -153,49 +206,45 @@ public class StudentDashboard {
             }
 
             Button submitButton = new Button("Submit");
-            // Inside the openQuizButton.setOnAction(...) where you build the quiz UI:
-
-            Label resultLabel = new Label();  // starts empty, no message yet
+            submitButton.setStyle("-fx-background-color: #2196F3; -fx-text-fill: white; -fx-font-weight: bold;");
+            Label resultLabel = new Label();
+            resultLabel.setTextFill(Color.DARKBLUE);
+            resultLabel.setFont(Font.font("System", FontWeight.BOLD, 13));
 
             submitButton.setOnAction(event -> {
-                resultLabel.setText("");  // Clear previous messages
-            
-                // Step 1: Check if all fields are filled
+                resultLabel.setText("");
+
                 for (TextField answerField : answerFields) {
                     if (answerField.getText().trim().isEmpty()) {
                         resultLabel.setText("Please answer all questions before submitting.");
                         return;
                     }
                 }
-            
-                // Step 2: Save answers (only call .answer(), no grading yet)
+
                 for (int i = 0; i < questions.size(); i++) {
                     String studentAnswer = answerFields.get(i).getText().trim();
                     questions.get(i).answer(studentAnswer);
                 }
-            
-                // Step 3: Let student handle grading (this calls quiz.grade() safely)
-                if (!student.getQuizzesTaken().contains(quiz)) {
-                    student.takeQuiz(quiz);  // ✅ Handles grade() internally
-                    student.setGrade(course, student.getGrade(course)); // Optional sync
-            
-                    // Step 4: Display result
-                    int total = quiz.getTotalGrade();  // total number of questions
-                    Integer score = student.getGrade(course);
 
+                if (!student.getQuizzesTaken().contains(quiz)) {
+                    student.takeQuiz(quiz);
+                    student.setGrade(course, student.getGrade(course));
+
+                    int total = quiz.getTotalGrade();
+                    Integer score = student.getGrade(course);
                     int percentage = (score != null && total > 0) ? (score * 100) / total : 0;
                     resultLabel.setText("You scored: " + percentage + "%");
-                    // Step 5: Update UI
+
                     openQuizButton.setDisable(true);
                     refreshQuizzesView(student);
                     updateProfileView(student);
                 } else {
                     resultLabel.setText("You already took this quiz.");
                 }
-            
+
                 submitButton.setDisable(true);
             });
-            
+
             quizLayout.getChildren().addAll(submitButton, resultLabel);
             Scene quizScene = new Scene(quizLayout, 400, 400);
             quizStage.setScene(quizScene);
@@ -213,36 +262,49 @@ public class StudentDashboard {
         quizBox.getChildren().clear();
 
         quizzesTakenLabel.setText("Quizzes Taken: " + student.getQuizzesTaken().size());
+        quizzesTakenLabel.setFont(Font.font("System", FontWeight.BOLD, 12));
+        quizzesTakenLabel.setTextFill(Color.DARKBLUE);
         quizBox.getChildren().add(quizzesTakenLabel);
 
         for (Quiz q : student.getQuizzesTaken()) {
             Integer grade = student.getGrade(q.getCourse());
             int total = q.getTotalGrade();
             int percentage = (grade != null && total > 0) ? (grade * 100) / total : 0;
-        
-            String display = q.getCourse().getLanguage().getLanguageName()
-                    + " quiz grade: " + (grade != null ? grade + "/" + total + " (" + percentage + "%)" : "N/A");
-        
-            quizBox.getChildren().add(new Label(display));
+
+            Label quizGradeLabel = new Label(q.getCourse().getLanguage().getLanguageName()
+                    + " quiz grade: " + (grade != null ? grade + "/" + total + " (" + percentage + "%)" : "N/A"));
+            quizGradeLabel.setTextFill(Color.DARKBLUE);
+            quizGradeLabel.setFont(Font.font("System", FontWeight.NORMAL, 12));
+            quizBox.getChildren().add(quizGradeLabel);
         }
-        
     }
 
     private static void updateProfileView(Student student) {
+         StringBuilder history = new StringBuilder();
+        for (Quiz quiz : student.getQuizzesTaken()) {
+            int grade = student.getGrade(quiz.getCourse());
+            history.append("Quiz: ").append(quiz.getTitle())
+                   .append(" | Score: ").append(grade).append("%\n");
+        }
         profileDetails.setText(
             "Name: " + student.getName() + "\n" +
             "ID: " + student.getID() + "\n" +
             "Enrolled Courses: " + student.getEnrolledCourses().size() + "\n" +
-            "Quizzes Taken: " + student.getQuizzesTaken().size()
+            "Quizzes Taken: " + student.getQuizzesTaken().size() + "\n\n" +
+            "Quiz History:\n" + (history.length() > 0 ? history : "No quizzes completed yet.")
         );
+        profileDetails.setFont(Font.font("System", FontWeight.NORMAL, 13));
     }
 
     private static VBox getGradesView(Student student) {
         VBox layout = new VBox(10);
         layout.setPadding(new Insets(15));
-        Label title = new Label("Grades");
+        Label title = createBoldLabel("Grades");
 
         Label gradesLabel = new Label(student.getGrades().isEmpty() ? "No grades available." : student.getGrades());
+        gradesLabel.setTextFill(Color.DARKBLUE);
+        gradesLabel.setFont(Font.font("System", FontWeight.NORMAL, 12));
+        
         layout.getChildren().addAll(title, gradesLabel);
         return layout;
     }
@@ -250,7 +312,7 @@ public class StudentDashboard {
     private static VBox getProfileView(Student student) {
         VBox layout = new VBox(10);
         layout.setPadding(new Insets(15));
-        Label title = new Label("Profile Information");
+        Label title = createBoldLabel("Profile Information");
 
         Label profileDetails = new Label(
             "Name: " + student.getName() + "\n" +
@@ -261,5 +323,12 @@ public class StudentDashboard {
 
         layout.getChildren().addAll(title, profileDetails);
         return layout;
+    }
+
+    private static Label createBoldLabel(String text) {
+        Label label = new Label(text);
+        label.setFont(Font.font("System", FontWeight.BOLD, 14));
+        label.setTextFill(Color.DARKBLUE);
+        return label;
     }
 }

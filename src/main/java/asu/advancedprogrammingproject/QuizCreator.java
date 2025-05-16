@@ -1,19 +1,17 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package asu.advancedprogrammingproject;
 
 import javafx.scene.Scene;
-
 import java.util.ArrayList;
 import java.util.List;
 import javafx.geometry.Insets;
-import javafx.scene.Scene;
+import javafx.geometry.Pos;
 import javafx.scene.control.*;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.scene.text.Text;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
 
 /**
@@ -24,62 +22,118 @@ public class QuizCreator {
     public static Scene createQuizScene(Stage primaryStage, Teacher teacher) {
         primaryStage.setTitle("Create Quiz");
 
-        // **ComboBox for selecting course**
+        // **Styled Background**
+        StackPane root = new StackPane();
+        root.setStyle("-fx-background-color: linear-gradient(to bottom, #d55a9d, #574bdf);");
+
+        VBox card = new VBox(15);
+        card.setPadding(new Insets(25));
+        card.setAlignment(Pos.CENTER);
+        card.setMaxWidth(400);
+        card.setStyle(
+            "-fx-background-color: white;" +
+            "-fx-background-radius: 10;" +
+            "-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0, 0, 8);"
+        );
+
+        // **Styled Course Dropdown**
         ComboBox<Course> courseComboBox = new ComboBox<>();
         courseComboBox.getItems().addAll(teacher.getLanguage().getcourses());
         courseComboBox.setPromptText("Select Course");
-        courseComboBox.setOnAction(e -> {
-            Course selectedCourse = courseComboBox.getValue();
-            if (selectedCourse != null) {
-                System.out.println("Selected course: " + selectedCourse.getID());
-            }
-        });
-        List<Question> questions = new ArrayList<Question>();
-        // **TextField for entering question and answer**
-        TextField QuestionTextField = new TextField();
-        QuestionTextField.setPromptText("Enter Question");
-        Label QuestionLabel = new Label("Question");
-        QuestionLabel.setLabelFor(QuestionTextField);
-        HBox QuestionBox = new HBox(10);
-        QuestionBox.getChildren().addAll(QuestionLabel, QuestionTextField);
-        TextField AnswerTextField = new TextField();
-        AnswerTextField.setPromptText("Enter Answer");
-        Label AnswerLabel = new Label("Answer");
-        AnswerLabel.setLabelFor(AnswerTextField);
-        HBox AnswerBox = new HBox(10);
-        AnswerBox.getChildren().addAll(AnswerLabel, AnswerTextField);
+        courseComboBox.setStyle(
+            "-fx-background-color: #f0f0f0;" +
+            "-fx-background-radius: 5;" +
+            "-fx-padding: 8;" +
+            "-fx-border-color: transparent;"
+        );
+
+        List<Question> questions = new ArrayList<>();
+
+        // **Styled Question Input**
+        Label questionLabel = createBoldLabel("Question:");
+        TextField questionTextField = new TextField();
+        questionTextField.setPromptText("Enter Question");
+        questionTextField.setStyle(
+            "-fx-background-color: #f0f0f0;" +
+            "-fx-background-radius: 5;" +
+            "-fx-padding: 8;" +
+            "-fx-border-color: transparent;"
+        );
+        questionTextField.setMinWidth(200);  // ✅ Set consistent width
+        HBox questionBox = new HBox(10);
+        questionBox.setAlignment(Pos.CENTER_LEFT);
+        questionBox.getChildren().addAll(questionLabel, questionTextField);
+
+        // **Styled Answer Input**
+        Label answerLabel = createBoldLabel("Answer:");
+        TextField answerTextField = new TextField();
+        answerTextField.setPromptText("Enter Answer");
+        answerTextField.setStyle(
+            "-fx-background-color: #f0f0f0;" +
+            "-fx-background-radius: 5;" +
+            "-fx-padding: 8;" +
+            "-fx-border-color: transparent;"
+        );
+        answerTextField.setMinWidth(200);  // ✅ Match width with question input
+        HBox answerBox = new HBox(10);
+        answerBox.setAlignment(Pos.CENTER_LEFT);
+        answerBox.getChildren().addAll(answerLabel, answerTextField);
+
+        // **Styled "Add Question" Button**
         Button addQuestionButton = new Button("Add Question");
+        addQuestionButton.setStyle(
+            "-fx-background-color: #2196F3;" +
+            "-fx-text-fill: white;" +
+            "-fx-font-weight: bold;" +
+            "-fx-background-radius: 5;" +
+            "-fx-padding: 8 16;" +
+            "-fx-cursor: hand;"
+        );
         addQuestionButton.setOnAction(e -> {
-            String questionText = QuestionTextField.getText();
-            String answerText = AnswerTextField.getText();
+            String questionText = questionTextField.getText();
+            String answerText = answerTextField.getText();
             if (!questionText.isEmpty() && !answerText.isEmpty()) {
-                // Logic to add question to quiz
                 System.out.println("Added question: " + questionText + " with answer: " + answerText);
-                QuestionTextField.clear();
-                AnswerTextField.clear();
+                questionTextField.clear();
+                answerTextField.clear();
                 questions.add(new Question(questionText, answerText));
             } else {
                 System.out.println("Please enter both question and answer.");
             }
-        });      
-        // **Button to create quiz**
+        });
+
+        // **Styled "Create Quiz" Button**
         Button createQuizButton = new Button("Create Quiz");
+        createQuizButton.setStyle(
+            "-fx-background-color: #d55a9d;" +
+            "-fx-text-fill: white;" +
+            "-fx-font-weight: bold;" +
+            "-fx-background-radius: 5;" +
+            "-fx-padding: 8 16;" +
+            "-fx-cursor: hand;"
+        );
         createQuizButton.setOnAction(e -> {
             Course selectedCourse = courseComboBox.getValue();
             if (selectedCourse != null) {
                 teacher.createQuiz(selectedCourse, questions);
                 System.out.println("Creating quiz for course: " + selectedCourse.getID());
-                primaryStage.setScene(TeacherDashboard.createStudentDashboardScene(primaryStage, teacher));
+                primaryStage.setScene(TeacherDashboard.createTeacherDashboardScene(primaryStage, teacher));
             } else {
                 System.out.println("Please select a course.");
             }
-
         });
 
-        VBox layout = new VBox(10);
-        layout.setPadding(new Insets(15));
-        layout.getChildren().addAll(courseComboBox,QuestionBox,AnswerBox,addQuestionButton,createQuizButton);
+        // **Styled Layout**
+        card.getChildren().addAll(courseComboBox, questionBox, answerBox, addQuestionButton, createQuizButton);
+        root.getChildren().add(card);
 
-        return new Scene(layout, 400, 300);
+        return new Scene(root, 600, 400);
+    }
+
+    private static Label createBoldLabel(String text) {
+        Label label = new Label(text);
+        label.setFont(Font.font("System", FontWeight.BOLD, 14));
+        label.setTextFill(Color.DARKBLUE);
+        return label;
     }
 }
