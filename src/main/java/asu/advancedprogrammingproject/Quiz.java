@@ -46,4 +46,10 @@ public class Quiz implements Gradeable {
         }
         System.out.println("Total Grade: " + grade + "/" + totalGrade);
     }
+    public int getTotalGrade() {
+        return totalGrade;
+    }
+    public Course getCourse() {
+        return course;
+    }
 }

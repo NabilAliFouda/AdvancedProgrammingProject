@@ -82,9 +82,11 @@ public abstract class User {
         return "User{name='" + name + "', ID=" + ID + ", loggedIn=" + loggedIn + "}";
     }
 
+
     /**
      * Abstract method that must be implemented by subclasses to return the user's role.
      */
+    public abstract void getRole();
     
 }
 

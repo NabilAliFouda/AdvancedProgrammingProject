@@ -44,6 +44,9 @@ public class Course {
         }
         students.remove(student);
     }
+    public int getID() {
+        return courseID;
+    }
 
     public void print(){
         System.out.println("Language: " + language.getLanguageName());
