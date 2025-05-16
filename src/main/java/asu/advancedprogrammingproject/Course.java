@@ -27,7 +27,7 @@ public class Course {
         this.students = students;
     }
     public Course(){
-        this.language = new Language();
+        this.language = null;
         this.courseID = 0;
         this.level = "";
         this.Price = 0;

@@ -26,7 +26,7 @@ public class Teacher extends User {
     }
 
     public Teacher() {
-        this(" ", 0, " ", new Language());
+        this(" ", 0, " ", null);
     }
 
     @Override
