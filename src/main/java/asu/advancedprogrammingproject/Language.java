@@ -27,6 +27,12 @@ public class Language implements Comparable<Language> {
         this.teachers = new ArrayList<Teacher>();
         this.courses = new Course[0];
     }
+    public Language(){
+        this.LanguageName = "";
+        this.StudentNo = 0;
+        this.teachers = new ArrayList<Teacher>();
+        this.courses = new Course[0];
+    }
     public List<Teacher> getteachers() {
         return teachers;
     }
@@ -43,9 +49,23 @@ public class Language implements Comparable<Language> {
     public int compareTo(Language other) {
         return this.StudentNo - other.StudentNo;
     }
+<<<<<<< HEAD
     @Override
     public String toString() {
         return LanguageName; // or getLanguageName()
     }
 
+=======
+    public void incrementStudentNo() {
+        this.StudentNo++;
+    }
+    public void decrementStudentNo() throws IllegalStateException {
+        // Check if the student number is already zero before decrementing
+        if (this.StudentNo > 0) {
+            this.StudentNo--;
+        } else {
+            throw new IllegalStateException("Student number cannot be negative");
+        }
+    }
+>>>>>>> ad7cbf8439eca25d5d3e59785930ca249414fb08
 }

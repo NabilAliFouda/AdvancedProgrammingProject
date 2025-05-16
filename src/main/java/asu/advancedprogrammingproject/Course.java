@@ -46,6 +46,8 @@ public class Course {
 
     public void addStudent(Student student) {
         students.add(student);
+        // Increment the student number in the language object
+        language.incrementStudentNo();
     }
 
     public void removeStudent(Student student) throws IllegalStateException {
@@ -53,6 +55,8 @@ public class Course {
             throw new IllegalStateException("No students to remove");
         }
         students.remove(student);
+        // Decrement the student number in the language object
+        language.decrementStudentNo();
     }
 
     public int getID() {
