@@ -56,6 +56,10 @@ public class Teacher extends User {
             System.out.println("Grading failed: " + e.getMessage());
         }
     }
+    public Language getLanguage() {
+        return language;
+    }
+
 
     // Prints basic info about the teacher
     public void printInfo() {

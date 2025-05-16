@@ -18,17 +18,18 @@ public class LanguageTest {
     @Test
     void testLanguageConstructor() {
         Language language = new Language();
-        assertEquals(0, language.getcourses().length);
+        assertEquals(0, language.getcourses().size());
         assertEquals(0, language.getteachers().size());
     }
     @Test
     void testLanguageConstructorWithParameters() {
         List<Teacher> teachers = new ArrayList<Teacher>();
-        Course[] courses = new Course[5];
+        List<Course> courses = new ArrayList<Course>();
         Language language = new Language(5, teachers, courses);
-        assertEquals(5, language.getcourses().length);
+        assertEquals(5, language.getcourses().size());
         assertEquals(0, language.getteachers().size());
     }
+    @Test
     void testGetLanguageName() {
         Language language = new Language();
         assertNull(language.getLanguageName());
@@ -41,7 +42,7 @@ public class LanguageTest {
     @Test
     void testGetCourses() {
         Language language = new Language();
-        assertEquals(0, language.getcourses().length);
+        assertEquals(0, language.getcourses().size());
     }
     @Test
     void testAddTeacher() {
@@ -63,7 +64,7 @@ public class LanguageTest {
         Language language = new Language();
         language.incrementStudentNo();
         language.decrementStudentNo();
-        assertEquals(0, language.getcourses().length);
+        assertEquals(0, language.getcourses().size());
     }
     @Test
     void testSorting() {

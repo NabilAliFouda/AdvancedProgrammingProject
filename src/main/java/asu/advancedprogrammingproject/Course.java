@@ -25,6 +25,7 @@ public class Course {
     // Constructor with all parameters
     public Course(Language language, int courseID, String level, int Price, Teacher teacher, List<Student> students) {
         this.language = language;
+        this.language.getcourses().add(this);
         this.courseID = courseID;
         this.level = level;
         this.Price = Price;

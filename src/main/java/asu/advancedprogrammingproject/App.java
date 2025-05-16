@@ -120,7 +120,9 @@ for (Course course : testStudent.getEnrolledCourses()) {
 
                     if (user instanceof Student) {
                         primaryStage.setScene(StudentDashboard.createStudentDashboardScene(primaryStage, (Student) user));
-                    } else {
+                    } else if(user instanceof Teacher) {
+                        primaryStage.setScene(TeacherDashboard.createStudentDashboardScene(primaryStage, (Teacher) user));}
+                     else {
                         primaryStage.setScene(Dashboard.createDashboardScene(primaryStage, user));
                     }
 

@@ -13,8 +13,8 @@ public class Language implements Comparable<Language> {
     private String LanguageName;
     private int StudentNo;
     private List<Teacher> teachers;
-    private Course courses[];
-    public Language(int StudentNo, List<Teacher> teachers, Course courses[]){
+    private List<Course> courses;
+    public Language(int StudentNo, List<Teacher> teachers, List<Course> courses){
         this.StudentNo = StudentNo;
         this.teachers = teachers;
         this.courses = courses;
@@ -23,18 +23,18 @@ public class Language implements Comparable<Language> {
         this.LanguageName = name;
         this.StudentNo = 0;
         this.teachers = new ArrayList<Teacher>();
-        this.courses = new Course[0];
+        this.courses = new ArrayList<Course>();
     }
     public Language(){
         this.LanguageName = "";
         this.StudentNo = 0;
         this.teachers = new ArrayList<Teacher>();
-        this.courses = new Course[0];
+        this.courses = new ArrayList<Course>();
     }
     public List<Teacher> getteachers() {
         return teachers;
     }
-    public Course[] getcourses() {
+    public List<Course> getcourses() {
         return courses;
     }  
     public String getLanguageName() {
