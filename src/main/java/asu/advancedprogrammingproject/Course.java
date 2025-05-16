@@ -48,11 +48,11 @@ public class Course {
         System.out.println("Course ID: " + courseID);
         System.out.println("Level: " + level);
         System.out.println("Price: " + Price);
-        //System.out.println("Teacher: " + teacher.getName());
+        System.out.println("Teacher: " + teacher.toString());
         System.out.print("Students: ");
-//        for (Student student : students) {
-//            System.out.print(student.getName() + " ");
-//        }
+       for (Student student : students) {
+           System.out.print(student.toString() + " ");
+       }
         System.out.println();
     }
 
