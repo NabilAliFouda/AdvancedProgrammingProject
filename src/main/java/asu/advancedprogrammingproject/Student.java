@@ -50,13 +50,21 @@ public class Student extends User {
 
     public String getGrades() {
         StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < enrolledCourses.size(); i++) {
-            Course c = enrolledCourses.get(i);
-            int grade = courseGrades.get(i);
-            sb.append("Course: ").append(c.getID()).append(" | Grade: ").append(grade).append("/100\n");
+        for (Quiz quiz : quizzesTaken) {
+            Course course = quiz.getCourse();
+            int total = quiz.getTotalGrade();
+            try {
+                int score = quiz.grade(); // returns score (already graded if taken)
+                sb.append("Course: ").append(course.getID())
+                  .append(" | Grade: ").append(score).append("/").append(total).append("\n");
+            } catch (IllegalStateException e) {
+                sb.append("Course: ").append(course.getID())
+                  .append(" | Grade: Not available (").append(e.getMessage()).append(")\n");
+            }
         }
         return sb.toString();
     }
+    
 
     public void setGrade(Course c, int grade) {
         int index = enrolledCourses.indexOf(c);

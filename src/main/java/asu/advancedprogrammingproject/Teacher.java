@@ -51,7 +51,7 @@ public class Teacher extends User {
         try {
             int score = quiz.grade();
             System.out.println("Quiz graded successfully.");
-            System.out.println("Score: " + score + "/" + quiz.getTotalGrade());
+            System.out.println("Score: " + score + "/" + quiz.grade());
         } catch (IllegalStateException e) {
             System.out.println("Grading failed: " + e.getMessage());
         }
