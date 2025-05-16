@@ -20,8 +20,16 @@ public class Quiz implements Gradeable {
     public Quiz(Question[] questions, Course course, String title) {
         this.questions = questions;
         this.totalGrade = questions.length;
+        this.course=course;
         this.graded = false;
         this.grade = 0;
+    }
+    public Quiz(Question[] questions, Course course) {
+        this.questions = questions;
+        this.totalGrade = questions.length;
+        this.graded = false;
+        this.grade = 0;
+        this.course=course;
     }
 
     public int grade() throws IllegalStateException {
