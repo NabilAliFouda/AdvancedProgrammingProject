@@ -47,6 +47,15 @@ public class Course {
     public int getID() {
         return courseID;
     }
+    public Language getLanguage(){
+        return language;
+    }
+    
+    @Override
+    public String toString() {
+        return getLanguage().getLanguageName() + " (Level: " + level + ")";
+    }
+
 
     public void print(){
         System.out.println("Language: " + language.getLanguageName());
