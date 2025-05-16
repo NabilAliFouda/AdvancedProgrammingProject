@@ -23,6 +23,7 @@ public class Quiz implements Gradeable {
         this.graded = false;
         this.grade = 0;
         this.title = title;
+        this.course = course;
     }
 
     public int grade() throws IllegalStateException {

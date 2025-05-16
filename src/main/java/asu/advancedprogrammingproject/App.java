@@ -39,7 +39,6 @@ public class App extends Application {
         Question q2 = new Question("The word 'algorithm' comes from a mathematician’s name.", "True");
         Quiz englishQuiz = new Quiz(new Question[]{q1, q2}, englishCourse, "Quiz 3");
         englishCourse.addQuiz(englishQuiz); 
-        testStudent.takeQuiz(englishQuiz);
 
         // Add users
         users.add(testStudent);

@@ -39,6 +39,8 @@ public class Student extends User {
 
         try {
             int score = q.grade();
+            int total = q.getTotalGrade();
+            int percentage = (score * 100) / total;
             quizzesTaken.add(q);
 
             // Update grade for the related course
@@ -50,7 +52,7 @@ public class Student extends User {
                 System.out.println("Course for this quiz not found in enrolled courses.");
             }
 
-            System.out.println("Quiz submitted successfully. Score: " + score);
+            System.out.println("Quiz submitted successfully. Score: " + score + "/" + total + " (" + percentage + "%)");
         } catch (IllegalStateException e) {
             System.out.println("Quiz already graded or not answerable: " + e.getMessage());
         }

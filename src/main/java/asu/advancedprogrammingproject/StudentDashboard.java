@@ -158,40 +158,44 @@ public class StudentDashboard {
             Label resultLabel = new Label();  // starts empty, no message yet
 
             submitButton.setOnAction(event -> {
-                // Clear previous message each submit
-                resultLabel.setText("");
-
-                // Check if all questions answered
+                resultLabel.setText("");  // Clear previous messages
+            
+                // Step 1: Check if all fields are filled
                 for (TextField answerField : answerFields) {
                     if (answerField.getText().trim().isEmpty()) {
-                        resultLabel.setText("Question not answered");
+                        resultLabel.setText("Please answer all questions before submitting.");
                         return;
                     }
                 }
-
-                int correctCount = 0;
+            
+                // Step 2: Save answers (only call .answer(), no grading yet)
                 for (int i = 0; i < questions.size(); i++) {
                     String studentAnswer = answerFields.get(i).getText().trim();
-                    if (studentAnswer.equalsIgnoreCase(questions.get(i).getCorrectAnswer())) {
-                        correctCount++;
-                    }
+                    questions.get(i).answer(studentAnswer);
                 }
-
-                double score = ((double) correctCount / questions.size()) * 100;
-                resultLabel.setText("You scored: " + score + "%");
-
+            
+                // Step 3: Let student handle grading (this calls quiz.grade() safely)
                 if (!student.getQuizzesTaken().contains(quiz)) {
-                    student.takeQuiz(quiz);
-                    student.setGrade(course, (int) score);
+                    student.takeQuiz(quiz);  // ✅ Handles grade() internally
+                    student.setGrade(course, student.getGrade(course)); // Optional sync
+            
+                    // Step 4: Display result
+                    int total = quiz.getTotalGrade();  // total number of questions
+                    Integer score = student.getGrade(course);
+
+                    int percentage = (score != null && total > 0) ? (score * 100) / total : 0;
+                    resultLabel.setText("You scored: " + percentage + "%");
+                    // Step 5: Update UI
                     openQuizButton.setDisable(true);
                     refreshQuizzesView(student);
                     updateProfileView(student);
+                } else {
+                    resultLabel.setText("You already took this quiz.");
                 }
-
+            
                 submitButton.setDisable(true);
             });
-
-
+            
             quizLayout.getChildren().addAll(submitButton, resultLabel);
             Scene quizScene = new Scene(quizLayout, 400, 400);
             quizStage.setScene(quizScene);
@@ -213,10 +217,15 @@ public class StudentDashboard {
 
         for (Quiz q : student.getQuizzesTaken()) {
             Integer grade = student.getGrade(q.getCourse());
-            Label gradeLabel = new Label(q.getCourse().getLanguage().getLanguageName()
-                    + " quiz grade: " + (grade != null ? grade + "%" : "N/A"));
-            quizBox.getChildren().add(gradeLabel);
+            int total = q.getTotalGrade();
+            int percentage = (grade != null && total > 0) ? (grade * 100) / total : 0;
+        
+            String display = q.getCourse().getLanguage().getLanguageName()
+                    + " quiz grade: " + (grade != null ? grade + "/" + total + " (" + percentage + "%)" : "N/A");
+        
+            quizBox.getChildren().add(new Label(display));
         }
+        
     }
 
     private static void updateProfileView(Student student) {

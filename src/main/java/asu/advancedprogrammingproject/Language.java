@@ -15,7 +15,6 @@ public class Language implements Comparable<Language> {
     private List<Teacher> teachers;
     private Course courses[];
     
-    public Language(){}
     public Language(int StudentNo, List<Teacher> teachers, Course courses[]){
         this.StudentNo = StudentNo;
         this.teachers = teachers;
@@ -49,13 +48,11 @@ public class Language implements Comparable<Language> {
     public int compareTo(Language other) {
         return this.StudentNo - other.StudentNo;
     }
-<<<<<<< HEAD
     @Override
     public String toString() {
         return LanguageName; // or getLanguageName()
     }
 
-=======
     public void incrementStudentNo() {
         this.StudentNo++;
     }
@@ -67,5 +64,4 @@ public class Language implements Comparable<Language> {
             throw new IllegalStateException("Student number cannot be negative");
         }
     }
->>>>>>> ad7cbf8439eca25d5d3e59785930ca249414fb08
 }
