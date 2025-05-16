@@ -14,6 +14,7 @@ public class Quiz implements Gradeable {
     private int grade;
     private boolean graded;
 
+
     public Quiz(Question[] questions, Course course) {
         this.questions = questions;
         this.totalGrade = questions.length;

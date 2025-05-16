@@ -17,6 +17,7 @@ public class Course {
     private int Price;
     private Teacher teacher;
     private List<Student> students;
+    private int courseGrade;
     public Course(Language language, int courseID, String level, int Price, Teacher teacher, List<Student> students){
         this.language = language;
         this.courseID = courseID;
@@ -43,6 +44,7 @@ public class Course {
         }
         students.remove(student);
     }
+
     public void print(){
         System.out.println("Language: " + language.getLanguageName());
         System.out.println("Course ID: " + courseID);
@@ -54,6 +56,9 @@ public class Course {
            System.out.print(student.toString() + " ");
        }
         System.out.println();
+    }
+    public void appendCourseGrade(int courseGrade) {
+        this.courseGrade = courseGrade;
     }
 
     

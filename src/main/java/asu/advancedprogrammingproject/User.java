@@ -85,6 +85,6 @@ public abstract class User {
     /**
      * Abstract method that must be implemented by subclasses to return the user's role.
      */
-    public abstract void getRole();
+    
 }
 
