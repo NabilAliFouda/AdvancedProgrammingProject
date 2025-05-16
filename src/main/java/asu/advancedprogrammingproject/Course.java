@@ -92,7 +92,6 @@ public class Course {
         quizzes.add(quiz);
     }
 
-    // ✅ NEW: Get all quizzes of the course
     public List<Quiz> getQuizzes() {
         return quizzes;
     }

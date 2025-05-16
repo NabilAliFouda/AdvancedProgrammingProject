@@ -47,6 +47,11 @@ public class Language implements Comparable<Language> {
     public int compareTo(Language other) {
         return this.StudentNo - other.StudentNo;
     }
+    @Override
+    public String toString() {
+        return LanguageName; // or getLanguageName()
+    }
+
     public void incrementStudentNo() {
         this.StudentNo++;
     }

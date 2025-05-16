@@ -1,15 +1,7 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package asu.advancedprogrammingproject;
 
 import java.util.ArrayList;
 
-/**
- *
- * @author nabil
- */
 public class Student extends User {
     private ArrayList<Course> enrolledCourses;
     private ArrayList<Quiz> quizzesTaken;
@@ -33,39 +25,68 @@ public class Student extends User {
             return;
         }
         enrolledCourses.add(c);
-        courseGrades.add(0); // Default grade
-        c.addStudent(this);  // Ensure Course has addStudent(Student s)
+        courseGrades.add(0); // Default grade 0
+        c.addStudent(this);
         System.out.println(name + " enrolled in course: " + c.getID());
     }
 
+    // Student takes quiz: grade quiz, record it, and update courseGrades
     public void takeQuiz(Quiz q) {
+        if (quizzesTaken.contains(q)) {
+            System.out.println("Quiz already taken.");
+            return;
+        }
+
         try {
             int score = q.grade();
+            int total = q.getTotalGrade();
+            int percentage = (score * 100) / total;
             quizzesTaken.add(q);
-            System.out.println("Quiz submitted successfully. Score: " + score);
+
+            // Update grade for the related course
+            Course course = q.getCourse();
+            int index = enrolledCourses.indexOf(course);
+            if (index != -1) {
+                courseGrades.set(index, score);
+            } else {
+                System.out.println("Course for this quiz not found in enrolled courses.");
+            }
+
+            System.out.println("Quiz submitted successfully. Score: " + score + "/" + total + " (" + percentage + "%)");
         } catch (IllegalStateException e) {
             System.out.println("Quiz already graded or not answerable: " + e.getMessage());
         }
     }
 
+    // Get grades from courseGrades array matching enrolledCourses
     public String getGrades() {
         StringBuilder sb = new StringBuilder();
-        for (Quiz quiz : quizzesTaken) {
-            Course course = quiz.getCourse();
-            int total = quiz.getTotalGrade();
-            try {
-                int score = quiz.grade(); // returns score (already graded if taken)
+
+        for (int i = 0; i < enrolledCourses.size(); i++) {
+            Course course = enrolledCourses.get(i);
+            int grade = courseGrades.get(i);
+
+            // Check if student took a quiz for this course
+            boolean taken = quizzesTaken.stream().anyMatch(q -> q.getCourse().equals(course));
+
+            if (taken) {
+                // Assuming quiz total grade is accessible via course quizzes
+                int total = 0;
+                if (!course.getQuizzes().isEmpty()) {
+                    total = course.getQuizzes().get(0).getTotalGrade();
+                }
+
                 sb.append("Course: ").append(course.getID())
-                  .append(" | Grade: ").append(score).append("/").append(total).append("\n");
-            } catch (IllegalStateException e) {
+                  .append(" | Grade: ").append(grade).append("/").append(total).append("\n");
+            } else {
                 sb.append("Course: ").append(course.getID())
-                  .append(" | Grade: Not available (").append(e.getMessage()).append(")\n");
+                  .append(" | Grade: Not available\n");
             }
         }
         return sb.toString();
     }
-    
 
+    // Set grade manually (used if needed)
     public void setGrade(Course c, int grade) {
         int index = enrolledCourses.indexOf(c);
         if (index != -1) {
@@ -82,6 +103,13 @@ public class Student extends User {
     public ArrayList<Quiz> getQuizzesTaken() {
         return quizzesTaken;
     }
+    public Integer getGrade(Course c) {
+    int index = enrolledCourses.indexOf(c);
+    if (index != -1) {
+        return courseGrades.get(index);
+    }
+    return null;
+}
 
     // Prints basic student info
     public void printInfo() {

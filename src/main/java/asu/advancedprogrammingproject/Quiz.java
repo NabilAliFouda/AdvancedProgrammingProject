@@ -14,14 +14,14 @@ public class Quiz implements Gradeable {
     private int grade;
     private boolean graded;
     private Course course;
+    private String title;
 
 
-    public Quiz(Question[] questions, Course course) {
+    public Quiz(Question[] questions, Course course, String title) {
         this.questions = questions;
         this.totalGrade = questions.length;
         this.graded = false;
         this.grade = 0;
-        this.course = course;
     }
 
     public int grade() throws IllegalStateException {
@@ -52,6 +52,9 @@ public class Quiz implements Gradeable {
     }
     public Course getCourse() {
         return course;
+    }
+    public String getTitle() {
+        return title;
     }
     public Question[] getQuestions() {
         return questions;
