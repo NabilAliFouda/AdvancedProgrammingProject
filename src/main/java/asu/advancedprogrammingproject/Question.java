@@ -30,7 +30,7 @@ public class Question implements Gradeable {
         }
         if (!graded) {
             graded = true;
-            return 1;
+            return studentAnswer.trim().equalsIgnoreCase(correctAnswer.trim()) ? 1:0;
         }
         throw new IllegalStateException("Question already graded");
     }
