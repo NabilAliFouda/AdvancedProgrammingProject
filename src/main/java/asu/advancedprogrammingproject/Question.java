@@ -40,4 +40,19 @@ public class Question implements Gradeable {
         System.out.println("Your Answer: " + studentAnswer);
         System.out.println("Correct Answer: " + correctAnswer);
     }
+    public String getText() {
+        return text;
+    }
+
+    public String getCorrectAnswer() {
+        return correctAnswer;
+    }
+
+    public String getStudentAnswer() {
+        return studentAnswer != null ? studentAnswer : "Not answered yet"; // Handle null case safely
+    }
+
+    public boolean isGraded() {
+        return graded;
+    }
 }

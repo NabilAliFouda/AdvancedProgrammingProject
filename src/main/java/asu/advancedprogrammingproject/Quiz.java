@@ -52,4 +52,8 @@ public class Quiz implements Gradeable {
     public Course getCourse() {
         return course;
     }
+    public Question[] getQuestions() {
+        return questions;
+}
+
 }

@@ -3,6 +3,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package asu.advancedprogrammingproject;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,6 +11,7 @@ import java.util.List;
  *
  * @author nabil
  */
+
 public class Course {
     private Language language;
     private int courseID;
@@ -17,30 +19,38 @@ public class Course {
     private int Price;
     private Teacher teacher;
     private List<Student> students;
+    private List<Quiz> quizzes; 
     private int courseGrade;
-    public Course(Language language, int courseID, String level, int Price, Teacher teacher, List<Student> students){
+
+    // Constructor with all parameters
+    public Course(Language language, int courseID, String level, int Price, Teacher teacher, List<Student> students) {
         this.language = language;
         this.courseID = courseID;
         this.level = level;
         this.Price = Price;
         this.teacher = teacher;
-        this.students = students;
+        this.students = students != null ? students : new ArrayList<>();
+        this.quizzes = new ArrayList<>(); 
     }
-    public Course(){
-        this.language = new Language();
+
+    // Default constructor
+    public Course() {
+        this.language = null;
         this.courseID = 0;
         this.level = "";
         this.Price = 0;
         this.teacher = new Teacher();
-        this.students = new ArrayList<Student>();
+        this.students = new ArrayList<>();
+        this.quizzes = new ArrayList<>(); // ✅ Initialize quiz list
     }
-    public void addStudent(Student student){
+
+    public void addStudent(Student student) {
         students.add(student);
         // Increment the student number in the language object
         language.incrementStudentNo();
     }
+
     public void removeStudent(Student student) throws IllegalStateException {
-        // Check if the list is empty before trying to remove a student
         if (students.isEmpty()) {
             throw new IllegalStateException("No students to remove");
         }
@@ -48,25 +58,59 @@ public class Course {
         // Decrement the student number in the language object
         language.decrementStudentNo();
     }
+
     public int getID() {
         return courseID;
     }
 
-    public void print(){
+    public Language getLanguage() {
+        return language;
+    }
+
+    public int getPrice() {
+        return Price;
+    }
+
+    public String getLevel() {
+        return level;
+    }
+
+    public Teacher getTeacher() {
+        return teacher;
+    }
+
+    public List<Student> getStudents() {
+        return students;
+    }
+
+    public void appendCourseGrade(int num) {
+        this.courseGrade += num;
+    }
+
+    public void addQuiz(Quiz quiz) {
+        quizzes.add(quiz);
+    }
+
+    // ✅ NEW: Get all quizzes of the course
+    public List<Quiz> getQuizzes() {
+        return quizzes;
+    }
+
+    @Override
+    public String toString() {
+        return getLanguage().getLanguageName() + " (Level: " + level + ")";
+    }
+
+    public void print() {
         System.out.println("Language: " + language.getLanguageName());
         System.out.println("Course ID: " + courseID);
         System.out.println("Level: " + level);
         System.out.println("Price: " + Price);
         System.out.println("Teacher: " + teacher.toString());
         System.out.print("Students: ");
-       for (Student student : students) {
-           System.out.print(student.toString() + " ");
-       }
+        for (Student student : students) {
+            System.out.print(student.toString() + " ");
+        }
         System.out.println();
     }
-    public void appendCourseGrade(int num) {
-        this.courseGrade = this.courseGrade + num;
-    }
-
-    
 }

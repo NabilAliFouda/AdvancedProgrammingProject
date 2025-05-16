@@ -48,7 +48,7 @@ public abstract class User {
      * @param password  the input password to validate
      * @throws AlreadyLoggedInException if the user is already logged in
      */
-    public void logIn(int ID, String password) throws AlreadyLoggedInException {
+    public void logIn(int ID, String password) throws AlreadyLoggedInException, IllegalArgumentException {
         if (loggedIn) {
             throw new AlreadyLoggedInException("User is already logged in.");
         }
@@ -56,9 +56,10 @@ public abstract class User {
             System.out.println("Logged in successfully.");
             loggedIn = true;
         } else {
-            System.out.println("Incorrect ID or password.");
+            throw new IllegalArgumentException("Incorrect ID or password.");
         }
     }
+
 
     /**
      * Logs out the user if they are currently logged in.
@@ -77,16 +78,27 @@ public abstract class User {
      * Returns a string representation of the user.
      * Useful for debugging or displaying user info.
      */
+    public String getName(){
+        return name;
+    }    
+        
+    public int getID(){
+        return ID;
+    }    
+ 
+    public String getPassword(){
+        return password;
+    } 
+    
     @Override
     public String toString() {
         return "User{name='" + name + "', ID=" + ID + ", loggedIn=" + loggedIn + "}";
     }
 
-
     /**
      * Abstract method that must be implemented by subclasses to return the user's role.
      */
-    public abstract void getRole();
-    
+
+    public abstract void getRole();      
 }
 
