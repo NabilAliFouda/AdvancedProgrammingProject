@@ -25,6 +25,12 @@ public class Language implements Comparable<Language> {
         this.teachers = new ArrayList<Teacher>();
         this.courses = new Course[0];
     }
+    public Language(){
+        this.LanguageName = "";
+        this.StudentNo = 0;
+        this.teachers = new ArrayList<Teacher>();
+        this.courses = new Course[0];
+    }
     public List<Teacher> getteachers() {
         return teachers;
     }
