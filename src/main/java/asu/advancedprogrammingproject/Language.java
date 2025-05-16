@@ -3,7 +3,8 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package asu.advancedprogrammingproject;
-
+import java.util.ArrayList;
+import java.util.List;
 /**
  *
  * @author nabil
@@ -11,19 +12,19 @@ package asu.advancedprogrammingproject;
 public class Language implements Comparable<Language> {
     private String LanguageName;
     private int StudentNo;
-    private Teacher teachers[];
+    private List<Teacher> teachers;
     private Course courses[];
-    public Language(int StudentNo, Teacher teachers[], Course courses[]){
+    public Language(int StudentNo, List<Teacher> teachers, Course courses[]){
         this.StudentNo = StudentNo;
         this.teachers = teachers;
         this.courses = courses;
     }
     public Language(){
         this.StudentNo = 0;
-        this.teachers = new Teacher[0];
+        this.teachers = new ArrayList<Teacher>();
         this.courses = new Course[0];
     }
-    public Teacher[] getteachers() {
+    public List<Teacher> getteachers() {
         return teachers;
     }
     public Course[] getcourses() {
@@ -31,6 +32,9 @@ public class Language implements Comparable<Language> {
     }  
     public String getLanguageName() {
         return LanguageName;
+    }
+    public void addTeacher(Teacher teacher) {
+        teachers.add(teacher);
     }
     @Override
     public int compareTo(Language other) {
