@@ -38,9 +38,9 @@ public class Teacher extends User {
     }
 
     // Creates a quiz for a course using a list of questions
-    public Quiz createQuiz(Course course, List<Question> questions) {
+    public Quiz createQuiz(Course course, List<Question> questions, String title) {
         Question[] questionArray = questions.toArray(new Question[0]);
-        Quiz quiz = new Quiz(questionArray, course);
+        Quiz quiz = new Quiz(questionArray, course, title);
         createdQuizzes.add(quiz);
         System.out.println("Quiz created with " + questionArray.length + " questions for course: " + course.getID());
         return quiz;

@@ -37,7 +37,7 @@ public class App extends Application {
         // Create a quiz for English course and add it to the course
         Question q1 = new Question("Java is a type of snake.", "False");
         Question q2 = new Question("The word 'algorithm' comes from a mathematician’s name.", "True");
-        Quiz englishQuiz = new Quiz(new Question[]{q1, q2}, englishCourse);
+        Quiz englishQuiz = new Quiz(new Question[]{q1, q2}, englishCourse, "Quiz 3");
         englishCourse.addQuiz(englishQuiz); 
         testStudent.takeQuiz(englishQuiz);
 
@@ -51,14 +51,14 @@ public class App extends Application {
         primaryStage.show();
         
         System.out.println("Quizzes in English course: " + englishCourse.getQuizzes().size());
-System.out.println("Courses for Ali: " + testStudent.getEnrolledCourses().size());
+        System.out.println("Courses for Ali: " + testStudent.getEnrolledCourses().size());
 
-for (Course course : testStudent.getEnrolledCourses()) {
-    System.out.println("Course: " + course);
-    for (Quiz q : course.getQuizzes()) {
-        System.out.println("Quiz available with " + q.getQuestions().length + " questions");
-    }
-}
+        for (Course course : testStudent.getEnrolledCourses()) {
+            System.out.println("Course: " + course);
+            for (Quiz q : course.getQuizzes()) {
+                System.out.println("Quiz available with " + q.getQuestions().length + " questions");
+            }
+        }
 
     }
 
