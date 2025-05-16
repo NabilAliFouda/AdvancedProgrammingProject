@@ -1,3 +1,20 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
+package asu.advancedprogrammingproject;
+
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ *
+ * @author nabil
+ */
+/**
+ * The Teacher class represents a user who can create and grade quizzes.
+ * Each teacher is associated with a specific language and can track the quizzes they create.
+ */
 public class Teacher extends User {
 
     private Language language; // The language this teacher teaches
@@ -14,7 +31,10 @@ public class Teacher extends User {
 
     @Override
     public void getRole() {
-        System.out.println("Teacher");
+        System.out.println("Role: Teacher");
+    }
+    public List<Quiz> getCreatedQuizzes() {
+        return createdQuizzes;
     }
 
     // Creates a quiz for a course using a list of questions
@@ -26,16 +46,12 @@ public class Teacher extends User {
         return quiz;
     }
 
-    public List<Quiz> getCreatedQuizzes() {
-        return createdQuizzes;
-    }
-
     // Grades a quiz and prints the score
     public void gradeQuiz(Quiz quiz) {
         try {
             int score = quiz.grade();
             System.out.println("Quiz graded successfully.");
-            System.out.println("Score: " + score + "/" + quiz.getTotalGrade());
+            System.out.println("Score: " + score + "/" + quiz.grade());
         } catch (IllegalStateException e) {
             System.out.println("Grading failed: " + e.getMessage());
         }
@@ -49,5 +65,9 @@ public class Teacher extends User {
         System.out.println("- Logged In: " + loggedIn);
         System.out.println("- Language: " + language.getLanguageName());
         System.out.println("- Quizzes Created: " + createdQuizzes.size());
-    }
+    }
 }
+
+
+
+
