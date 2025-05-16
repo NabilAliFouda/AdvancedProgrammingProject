@@ -57,8 +57,8 @@ public class Course {
        }
         System.out.println();
     }
-    public void appendCourseGrade(int courseGrade) {
-        this.courseGrade = courseGrade;
+    public void appendCourseGrade(int num) {
+        this.courseGrade = this.courseGrade + num;
     }
 
     

@@ -13,6 +13,7 @@ public class Quiz implements Gradeable {
     private int totalGrade;
     private int grade;
     private boolean graded;
+    private Course course;
 
 
     public Quiz(Question[] questions, Course course) {
@@ -31,6 +32,7 @@ public class Quiz implements Gradeable {
                 }
             }
             graded = true;
+            course.appendCourseGrade(grade);
             return grade;
         }
         throw new IllegalStateException("Quiz already graded");
