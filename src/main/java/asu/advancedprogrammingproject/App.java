@@ -16,33 +16,50 @@ public class App extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-        // **Predefined languages**
+        // Predefined languages
         predefinedLanguages.add(new Language("English"));
         predefinedLanguages.add(new Language("Spanish"));
 
-        // **Create test student (Ali)**
+        // Create test student (Ali)
         Student testStudent = new Student("Ali", 101, "pass123");
 
-        // **Enroll Ali in two courses**
-        Course englishCourse = new Course(predefinedLanguages.get(0), 1, "Beginner", 100, new Teacher("Mona", 201, "teachpass", predefinedLanguages.get(0)), new ArrayList<>());
-        Course spanishCourse = new Course(predefinedLanguages.get(1), 2, "Intermediate", 120, new Teacher("Carlos", 202, "teachpass", predefinedLanguages.get(1)), new ArrayList<>());
+        // Create courses and teachers
+        Teacher mona = new Teacher("Mona", 201, "teachpass", predefinedLanguages.get(0));
+        Teacher carlos = new Teacher("Carlos", 202, "teachpass", predefinedLanguages.get(1));
 
+        Course englishCourse = new Course(predefinedLanguages.get(0), 1, "Beginner", 100, mona, new ArrayList<>());
+        Course spanishCourse = new Course(predefinedLanguages.get(1), 2, "Intermediate", 120, carlos, new ArrayList<>());
+
+        // Enroll Ali
         testStudent.enroll(englishCourse);
         testStudent.enroll(spanishCourse);
 
-        // **Create a quiz ONLY for English course**
-        Question q1 = new Question("What is Java?", "Programming Language");
-        Quiz englishQuiz = new Quiz(new Question[]{q1}, englishCourse);
+        // Create a quiz for English course and add it to the course
+        Question q1 = new Question("Java is a type of snake.", "False");
+        Question q2 = new Question("The word 'algorithm' comes from a mathematician’s name.", "True");
+        Quiz englishQuiz = new Quiz(new Question[]{q1, q2}, englishCourse);
+        englishCourse.addQuiz(englishQuiz); 
         testStudent.takeQuiz(englishQuiz);
 
-        // **Store test student in users list**
+        // Add users
         users.add(testStudent);
-        users.add(new Teacher("Mona", 201, "teachpass", predefinedLanguages.get(0)));
-        users.add(new Teacher("Carlos", 202, "teachpass", predefinedLanguages.get(1)));
+        users.add(mona);
+        users.add(carlos);
 
         primaryStage.setScene(createLoginScene(primaryStage));
         primaryStage.setTitle("Login");
         primaryStage.show();
+        
+        System.out.println("Quizzes in English course: " + englishCourse.getQuizzes().size());
+System.out.println("Courses for Ali: " + testStudent.getEnrolledCourses().size());
+
+for (Course course : testStudent.getEnrolledCourses()) {
+    System.out.println("Course: " + course);
+    for (Quiz q : course.getQuizzes()) {
+        System.out.println("Quiz available with " + q.getQuestions().length + " questions");
+    }
+}
+
     }
 
     public Scene createLoginScene(Stage primaryStage) {
@@ -52,12 +69,36 @@ public class App extends Application {
         PasswordField passField = new PasswordField();
         passField.setPromptText("Enter Password");
 
+        TextField visiblePassField = new TextField();
+        visiblePassField.setPromptText("Enter Password");
+        visiblePassField.setManaged(false);
+        visiblePassField.setVisible(false);
+
+        visiblePassField.textProperty().bindBidirectional(passField.textProperty());
+
+        CheckBox showPasswordCheckBox = new CheckBox("Show Password");
+        showPasswordCheckBox.setOnAction(e -> {
+            if (showPasswordCheckBox.isSelected()) {
+                visiblePassField.setManaged(true);
+                visiblePassField.setVisible(true);
+
+                passField.setManaged(false);
+                passField.setVisible(false);
+            } else {
+                visiblePassField.setManaged(false);
+                visiblePassField.setVisible(false);
+
+                passField.setManaged(true);
+                passField.setVisible(true);
+            }
+        });
+
         Label messageLabel = new Label();
 
         Button loginBtn = new Button("Login");
         loginBtn.setOnAction(e -> {
             String idText = idField.getText();
-            String passText = passField.getText();
+            String passText = passField.isVisible() ? passField.getText() : visiblePassField.getText();
 
             try {
                 int id = Integer.parseInt(idText);
@@ -76,6 +117,7 @@ public class App extends Application {
                 try {
                     user.logIn(id, passText);
                     messageLabel.setText("Login successful! Redirecting...");
+
                     if (user instanceof Student) {
                         primaryStage.setScene(StudentDashboard.createStudentDashboardScene(primaryStage, (Student) user));
                     } else {
@@ -93,9 +135,14 @@ public class App extends Application {
 
         VBox layout = new VBox(10);
         layout.setPadding(new Insets(15));
-        layout.getChildren().addAll(new Label("ID:"), idField, new Label("Password:"), passField, loginBtn, messageLabel);
+        layout.getChildren().addAll(
+                new Label("ID:"), idField,
+                new Label("Password:"), passField, visiblePassField,
+                showPasswordCheckBox, loginBtn, messageLabel
+        );
 
-        return new Scene(layout, 320, 280);
+        return new Scene(layout, 320, 300);
+        
     }
 
     public static void main(String[] args) {
