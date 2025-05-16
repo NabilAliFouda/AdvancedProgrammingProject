@@ -40,4 +40,15 @@ public class Language implements Comparable<Language> {
     public int compareTo(Language other) {
         return this.StudentNo - other.StudentNo;
     }
+    public void incrementStudentNo() {
+        this.StudentNo++;
+    }
+    public void decrementStudentNo() throws IllegalStateException {
+        // Check if the student number is already zero before decrementing
+        if (this.StudentNo > 0) {
+            this.StudentNo--;
+        } else {
+            throw new IllegalStateException("Student number cannot be negative");
+        }
+    }
 }
